@@ -1,25 +1,15 @@
 import express from "express";
-import connectNaDatabase from "./config/dbConnect.js";
-import routes from "./routes/index.js";
+import db from "./config/dbConnect.js"
+import routes from "./routes/index.js"
 
-const conexao = await connectNaDatabase();
-
-conexao.on("error", (erro) =>{
-    console.error("Erro  de conexão", erro)
+db.on("error", console.log.bind(console, 'Erro de conexão'))
+db.once("open", () => {
+  console.log('Conexão com o banco feita com sucesso')
 })
 
-conexao.once("open", () => {
-    console.log("Conexão com o banco feita com sucesso");
-})
-
-const app = express();
-routes(app);
-
-function buscaLivro(id) {
-    return livros.findIndex(livro => {
-        return livro.id === Number(id)
-    })
-}
+const app = express()
+app.use(express.json());
+routes(app)
 
 export default app;
 
